@@ -1,0 +1,23 @@
+# Copy to terraform.tfvars and fill in your values:
+#   copy terraform.tfvars.example terraform.tfvars
+
+aws_region   = "eu-west-1"
+project_name = "domain-lab"
+environment  = "lab"
+
+# Your public IP only — find it at https://checkip.amazonaws.com
+admin_cidr = "203.0.113.10/32"
+
+# EC2 key pair must already exist in the same region
+key_pair_name = "my-windows-lab-key"
+
+instance_type       = "t3.large"
+root_volume_size_gb = 80
+domain_name         = "lab.local"
+
+# Optional: used by 01-install-ad-dc.ps1 when run on the DC
+# safe_mode_password = "ChangeMe-StrongPass123!"
+
+tags = {
+  Owner = "classroom"
+}
