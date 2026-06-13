@@ -41,16 +41,35 @@ AWS VPC (10.0.0.0/16)
 
 ---
 
-### שלב 1.2 – Security Group
+### שלב 1.2 – מציאת ה-IP הציבורי שלכם
+
+לפני הגדרת ה-Security Group, עליכם לדעת מה ה-IP הציבורי שלכם.
+
+**אופציה א' – PowerShell:**
+```powershell
+(Invoke-WebRequest -Uri "https://api.ipify.org").Content
+```
+
+**אופציה ב' – דפדפן:**
+היכנסו ל-[https://whatismyip.com](https://whatismyip.com)
+
+> שמרו את ה-IP שקיבלתם — תצטרכו אותו בשלב הבא.
+
+---
+
+### שלב 1.3 – Security Group
 
 צרו Security Group בשם `AD-Lab-SG` עם חוקי **Inbound** הבאים:
 
 | Protocol | Port | Source | מטרה |
 |----------|------|--------|------|
-| RDP | 3389 | YOUR_IP/32 | גישה מרחוק |
-| All traffic | All | 10.0.1.0/24 | תקשורת פנימית בין ה-instances |
-| ICMP | All | 10.0.1.0/24 | ping בתוך הרשת |
+| RDP | 3389 | `YOUR_IP/32` | גישה מרחוק |
+| All traffic | All | `10.0.1.0/24` | תקשורת פנימית בין ה-instances |
+| ICMP | All | `10.0.1.0/24` | ping בתוך הרשת |
 
+**דוגמה:** אם ה-IP שלכם הוא `84.229.15.42` → הכניסו בשדה Source: `84.229.15.42/32`
+
+> **/32 = רק ה-IP שלכם בלבד — הכי מאובטח.**  
 > **אבטחה:** אל תפתחו RDP ל-`0.0.0.0/0` בסביבת ייצור. לצורך המעבדה השתמשו ב-IP שלכם בלבד.
 
 ---
