@@ -86,18 +86,7 @@ AWS VPC (10.0.0.0/16)
    - **Network:** `AD-Lab-VPC` | **Subnet:** `AD-Lab-Subnet`
    - **Auto-assign Public IP:** Enable
    - **Security Group:** `AD-Lab-SG`
-3. ב-**Advanced Details** → **User Data** (אופציונלי, להגדרת IP סטטי אוטומטית):
-
-```powershell
-<powershell>
-# הגדרת IP פרטי סטטי
-$adapter = Get-NetAdapter | Where-Object {$_.Status -eq "Up"}
-New-NetIPAddress -InterfaceAlias $adapter.Name -IPAddress 10.0.1.10 -PrefixLength 24 -DefaultGateway 10.0.1.1
-Set-DnsClientServerAddress -InterfaceAlias $adapter.Name -ServerAddresses 127.0.0.1
-</powershell>
-```
-
-4. לחצו **Launch Instance**
+3. לחצו **Launch Instance**
 
 ---
 
