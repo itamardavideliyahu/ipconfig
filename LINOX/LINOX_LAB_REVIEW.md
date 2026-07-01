@@ -1,536 +1,411 @@
 # מעבדת חזרה — לינוקס
 ### תרגול מעשי משולב | ~30 דקות
 
-> **נושאים:** ספריות, שמירת פלטים, ps, find, locate, chmod, kill, mv  
-> **רמה:** מתחילים (לאחר מעבדת הלינוקס הבסיסית)  
-> **סגנון:** כל השלבים בנויים אחד על השני — אל תדלג!
+> **נושאים:** תקיות, שמירת פלטים, ps, find, locate, chmod, kill, mv  
+> **רמה:** מתחילים  
+> **חשוב:** כל שלב בנוי על הקודם — עבוד לפי הסדר!
 
 ---
 
 ## הסיפור שלנו
 
-בשיעור הזה נדמה חוקר מערכת שמגיע למחשב לינוקס, **בונה סביבת עבודה**, **מתעד ממצאים לקבצים**, **בודק תהליכים פעילים**, **מחפש קבצים** ולבסוף **מסדר ומארז את התיעוד** ומעביר אותו למיקום קבוע.
+אנחנו מגיעים למחשב לינוקס, יוצרים תקיית עבודה, שומרים בה מידע על המערכת, ובסוף מעבירים את הכל למקום אחר.
 
 ---
 
-## שלב 1 — בניית סביבת עבודה ⏱ 5 דקות
+## שלב 1 — יצירת תקיית עבודה ⏱ 5 דקות
 
-### יצירת תקיית עבודה
-
-כל חוקר מערכת טוב מתחיל ביצירת **תקייה ייעודית לממצאים**. לא כותבים לשולחן העבודה — עובדים בסדר.
+### יצירת תקייה ותת-תקיות
 
 ```bash
-# צור תקיית חקירה עם תאריך כשם
-mkdir ~/investigation_$(date +%F)
+mkdir ~/mylab
 ```
-פלט — לא יוצג שום דבר (מחיקה שקטה = הצלחה). ודא:
+> אין פלט = הצלחה
+
+ודא שנוצרה:
+
 ```bash
 ls ~/
 ```
 פלט לדוגמה:
 ```
-Desktop  Documents  Downloads  investigation_2024-06-20
+Desktop  Documents  Downloads  mylab
 ```
 
+כנס לתקייה:
+
 ```bash
-# כנס לתקייה
-cd ~/investigation_$(date +%F)
+cd ~/mylab
 pwd
 ```
-פלט לדוגמה:
+פלט:
 ```
-/home/student/investigation_2024-06-20
+/home/student/mylab
 ```
 
+צור שתי תת-תקיות בתוכה:
+
 ```bash
-# צור תת-תקיות לסדר את הממצאים
-mkdir processes network files permissions
+mkdir processes files
 ls
 ```
 פלט:
 ```
-files  network  permissions  processes
+files  processes
 ```
-
-> **למה מסדרים ככה?** בחקירות אמיתיות — עשרות ממצאים. תקיות מסודרות חוסכות בלבול.
 
 ---
 
 ### שמירת פלטים לקבצים
 
-עד עכשיו ראינו פלטים בטרמינל — הם נעלמים. כדי לשמור ממצאים:
+עד עכשיו ראינו פלטים בטרמינל — הם נעלמים ברגע שסוגרים אותו.  
+כדי לשמור מידע, נשתמש ב-`>` ו-`>>`:
 
 ```
-פקודה > קובץ.txt    ← שמור פלט לקובץ (מחליף)
-פקודה >> קובץ.txt   ← הוסף פלט לקובץ קיים
+פקודה > קובץ.txt    ← כותב לקובץ (אם הקובץ קיים — מחליף!)
+פקודה >> קובץ.txt   ← מוסיף לסוף הקובץ (לא מוחק מה שיש)
 ```
 
-**תעד את פרטי המערכת הראשוניים:**
+נשמור מידע בסיסי על המערכת:
 
 ```bash
-echo "=== SYSTEM INFO ===" > system_info.txt
+echo "=== פרטי מערכת ===" > system_info.txt
 uname -a >> system_info.txt
-echo "" >> system_info.txt
-echo "=== OS RELEASE ===" >> system_info.txt
-cat /etc/os-release >> system_info.txt
-echo "" >> system_info.txt
-echo "=== CURRENT USER ===" >> system_info.txt
+echo "=== שם המשתמש ===" >> system_info.txt
 whoami >> system_info.txt
-echo "=== DATE ===" >> system_info.txt
-date >> system_info.txt
 ```
 
+הצג את מה שנשמר:
+
 ```bash
-# ודא שהקובץ נוצר ויש בו תוכן
 cat system_info.txt
 ```
 פלט לדוגמה:
 ```
-=== SYSTEM INFO ===
+=== פרטי מערכת ===
 Linux kali 6.1.0-kali9-amd64 #1 SMP x86_64 GNU/Linux
-
-=== OS RELEASE ===
-PRETTY_NAME="Kali GNU/Linux Rolling"
-NAME="Kali GNU/Linux"
-ID=kali
-
-=== CURRENT USER ===
+=== שם המשתמש ===
 student
-
-=== DATE ===
-Thu Jun 20 11:00:00 IDT 2024
 ```
 
 ---
 
 **משימות — שלב 1:**
 
-- [ ] צור `~/investigation_<תאריך-היום>` עם התת-תקיות
-- [ ] צור `system_info.txt` עם פרטי המערכת (כמו בדוגמה)
-- [ ] הרץ `ls -la` — כמה קבצים ותקיות יש בתקיית החקירה?
+- [ ] צור `~/mylab` עם שתי תת-תקיות: `processes` ו-`files`
+- [ ] שמור את פרטי המערכת ל-`system_info.txt` בדיוק כמו בדוגמה
+- [ ] הצג את הקובץ עם `cat` — יש בו שתי כותרות ותוכן?
 
 ---
 
-## שלב 2 — חקירת תהליכים עם `ps` ⏱ 8 דקות
+## שלב 2 — בדיקת תהליכים עם `ps` ⏱ 8 דקות
 
-### מה זה תהליך (Process)?
+### מה זה תהליך?
 
-כל דבר שרץ במחשב הוא **תהליך** — דפדפן, טרמינל, שרת, סקריפט.  
-לכל תהליך יש **PID** (Process ID) — מספר ייחודי לזיהוי.
-
-```
-[ תהליך אב (Parent) ]  ←  PID 1 = systemd (ראשון תמיד)
-        ↓
-[ תהליכי ילד (Child) ]  ←  כל שאר התהליכים
-```
-
-### פקודת `ps`
+כל דבר שרץ על המחשב — דפדפן, טרמינל, שרת — הוא **תהליך (Process)**.  
+לכל תהליך יש מספר זיהוי ייחודי שנקרא **PID**.
 
 ```
-ps        ← הצג רק תהליכי המשתמש הנוכחי בטרמינל הזה
-ps aux    ← הצג את כל התהליכים של כולם
-ps -ef    ← פורמט אחר — מוסיף PPID (תהליך אב)
+PID 1 = systemd  ← התהליך הראשון שהמערכת מפעילה
+PID 2, 3, 4...  ← כל שאר התהליכים
 ```
 
-| עמודה | משמעות |
-|-------|--------|
-| `USER` | המשתמש שהפעיל את התהליך |
-| `PID` | מספר זיהוי התהליך |
-| `%CPU` | אחוז שימוש ב-CPU |
-| `%MEM` | אחוז שימוש בזיכרון |
-| `STAT` | מצב התהליך (R=רץ, S=ישן, Z=זומבי) |
-| `COMMAND` | הפקודה שהפעילה את התהליך |
-
----
-
-### הדגמות
-
-**הצגת כל התהליכים:**
+### פקודת `ps aux`
 
 ```bash
 ps aux
 ```
 פלט לדוגמה:
 ```
-USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-root         1  0.0  0.1  22520  1856 ?        Ss   09:00   0:01 /sbin/init
-root       423  0.0  0.2  55680  2340 ?        Ss   09:00   0:00 /usr/sbin/sshd
-www-data   891  0.1  0.8 456120  8432 ?        S    09:01   0:05 /usr/sbin/apache2
-student   1203  0.0  0.1  22680  1024 pts/0    Ss   10:00   0:00 bash
-student   1337  0.0  0.0  17648   768 pts/0    R+   11:00   0:00 ps aux
+USER       PID %CPU %MEM  COMMAND
+root         1  0.0  0.1  /sbin/init
+root       423  0.0  0.2  /usr/sbin/sshd
+www-data   891  0.1  0.8  /usr/sbin/apache2
+student   1203  0.0  0.1  bash
+student   1250  0.0  0.0  ps aux
 ```
 
-**הצגת תהליכים של משתמש ספציפי:**
+**הסבר העמודות:**
 
-```bash
-ps aux | grep root
-```
-פלט לדוגמה:
-```
-root     1  0.0  0.1  22520  1856 ?  Ss  09:00  0:01 /sbin/init
-root   423  0.0  0.2  55680  2340 ?  Ss  09:00  0:00 /usr/sbin/sshd
-root   512  0.0  0.1  12340   890 ?  Ss  09:00  0:00 /usr/sbin/cron
-```
-
-**הצגת תהליך לפי שם:**
-
-```bash
-ps aux | grep apache2
-```
-פלט לדוגמה:
-```
-www-data   891  0.1  0.8 456120  8432 ?  S  09:01  0:05 /usr/sbin/apache2
-www-data   892  0.0  0.6 456120  6240 ?  S  09:01  0:00 /usr/sbin/apache2
-www-data   893  0.0  0.6 456120  6240 ?  S  09:01  0:00 /usr/sbin/apache2
-```
-
-**הצגת תהליכים בעץ (מי הפעיל את מי):**
-
-```bash
-ps -ef --forest | head -20
-```
-פלט לדוגמה:
-```
-UID    PID  PPID CMD
-root     1     0 /sbin/init
-root   423     1  \_ /usr/sbin/sshd
-root  1100   423      \_ sshd: student [priv]
-student 1101  1100          \_ sshd: student@pts/0
-student 1203  1101              \_ bash
-student 1250  1203                  \_ ps -ef --forest
-```
+| עמודה | משמעות |
+|-------|--------|
+| `USER` | מי הפעיל את התהליך |
+| `PID` | מספר זיהוי (חשוב ל-kill!) |
+| `%CPU` | כמה CPU הוא צורך |
+| `%MEM` | כמה זיכרון הוא צורך |
+| `COMMAND` | מה רץ בפועל |
 
 ---
 
-**שמירת ממצאי התהליכים:**
+חיפוש תהליך ספציפי לפי שם:
 
 ```bash
-# שמור את כל התהליכים לתקיית processes
-ps aux > ~/investigation_$(date +%F)/processes/all_processes.txt
-
-# שמור רק תהליכי root
-ps aux | grep root > ~/investigation_$(date +%F)/processes/root_processes.txt
-
-# ודא שהקבצים נשמרו
-ls -lh ~/investigation_$(date +%F)/processes/
+ps aux | grep bash
 ```
 פלט לדוגמה:
 ```
--rw-r--r-- 1 student student 4.2K Jun 20 all_processes.txt
--rw-r--r-- 1 student student  892 Jun 20 root_processes.txt
+student  1203  0.0  0.1  bash
+student  1301  0.0  0.0  grep --color=auto bash
 ```
+> השורה הראשונה היא ה-bash שלנו. השנייה היא ה-grep עצמו — אפשר להתעלם ממנה.
 
 ---
 
-**הפעלת תהליך ברקע לתרגול kill בהמשך:**
+הפעל תהליך ברקע (נצטרך אותו בשלב 5):
 
 ```bash
-# הפעל sleep למשך 1000 שניות ברקע (& = ברקע)
-sleep 1000 &
+sleep 500 &
 ```
 פלט:
 ```
 [1] 1456
 ```
-> `[1]` = מספר job | `1456` = PID של התהליך — שמור את ה-PID הזה!
+> `1456` הוא ה-PID — **שמור אותו! נשתמש בו אחר כך.**
+
+ודא שהתהליך רץ:
 
 ```bash
-# ודא שהתהליך רץ
 ps aux | grep sleep
 ```
 פלט:
 ```
-student   1456  0.0  0.0  13360   724 pts/0  S   11:05   0:00 sleep 1000
+student  1456  0.0  0.0  sleep 500
+```
+
+---
+
+שמור את רשימת התהליכים לתקייה שלנו:
+
+```bash
+ps aux > ~/mylab/processes/all_processes.txt
+```
+
+ודא שנשמר:
+
+```bash
+ls -lh ~/mylab/processes/
+```
+פלט:
+```
+-rw-r--r-- 1 student student 4.2K Jun 20 all_processes.txt
 ```
 
 ---
 
 **משימות — שלב 2:**
 
-- [ ] הרץ `ps aux` — זהה את PID של `bash` שלך
+- [ ] הרץ `ps aux` — מצא את ה-PID של `bash` שלך
+- [ ] הרץ `ps aux | grep root` — כמה תהליכים רצים כ-root?
+- [ ] הפעל `sleep 500 &` — **רשום את ה-PID שהוצג**
 - [ ] שמור את כל התהליכים ל-`processes/all_processes.txt`
-- [ ] שמור רק תהליכי `root` ל-`processes/root_processes.txt`
-- [ ] הפעל `sleep 1000 &` — **שמור את ה-PID שהוצג**
-- [ ] ודא עם `ps aux | grep sleep` שהתהליך רץ
 
 ---
 
-## שלב 3 — ניהול הרשאות עם `chmod` ⏱ 7 דקות
+## שלב 3 — הרשאות קבצים עם `chmod` ⏱ 7 דקות
 
 ### איך עובדות הרשאות בלינוקס?
 
-כל קובץ יש לו **שלוש קבוצות הרשאות**:
+כל קובץ יש לו שלוש קבוצות הרשאות:
 
 ```
 -  rw-  r--  r--
-│   │    │    └── Other  (כולם שאר המשתמשים)
-│   │    └─────── Group  (חברי הקבוצה)
-│   └──────────── User   (הבעלים)
-└──────────────── סוג (- = קובץ, d = תקייה)
+│   │    │    └── Other  — כולם
+│   │    └─────── Group  — חברי הקבוצה
+│   └──────────── User   — הבעלים של הקובץ
+└──────────────── סוג: - = קובץ,  d = תקייה
 ```
 
-**שלוש הרשאות אפשריות:**
+שלוש הרשאות אפשריות:
 
-| אות | ספרה | משמעות לקובץ | משמעות לתקייה |
-|-----|------|-------------|--------------|
-| `r` | 4 | קריאה | הצגת תוכן התקייה |
-| `w` | 2 | כתיבה | יצירה/מחיקה בתוך התקייה |
-| `x` | 1 | הרצה | כניסה לתקייה |
+| אות | מספר | מה זה אומר |
+|-----|------|------------|
+| `r` | 4 | קריאה (Read) |
+| `w` | 2 | כתיבה (Write) |
+| `x` | 1 | הרצה (Execute) |
 
-**חישוב מספרי (Octal):**
+### איך מחשבים את המספר?
 
 ```
-rwx = 4+2+1 = 7    ← הכל
-rw- = 4+2+0 = 6    ← קרא וכתוב
-r-x = 4+0+1 = 5    ← קרא והרץ
-r-- = 4+0+0 = 4    ← קריאה בלבד
---- = 0+0+0 = 0    ← כלום
+rwx = 4+2+1 = 7   (הכל)
+rw- = 4+2+0 = 6   (קרא וכתוב)
+r-- = 4+0+0 = 4   (קריאה בלבד)
+--- = 0+0+0 = 0   (כלום)
+```
 
-דוגמה: chmod 755 file → rwxr-xr-x
-             │││
-             ││└── Other: r-x = 5
-             │└─── Group: r-x = 5
-             └──── User:  rwx = 7
+`chmod 644 file` = User: `rw-` (6) | Group: `r--` (4) | Other: `r--` (4)
+
+---
+
+בדוק את ההרשאות הנוכחיות של הקבצים שלנו:
+
+```bash
+ls -la ~/mylab/
+```
+פלט לדוגמה:
+```
+drwxr-xr-x 4 student student 4096 Jun 20 .
+drwxr-xr-x 8 student student 4096 Jun 20 ..
+drwxr-xr-x 2 student student 4096 Jun 20 files
+drwxr-xr-x 2 student student 4096 Jun 20 processes
+-rw-r--r-- 1 student student   95 Jun 20 system_info.txt
 ```
 
 ---
 
-### הדגמות
+**שנה הרשאות — דוגמאות:**
 
-**בדיקת הרשאות קיימות:**
+הפוך קובץ לקריאה בלבד (גם לבעלים):
 
 ```bash
-ls -la ~/investigation_$(date +%F)/processes/all_processes.txt
+chmod 444 ~/mylab/system_info.txt
+ls -la ~/mylab/system_info.txt
 ```
 פלט:
 ```
--rw-r--r-- 1 student student 4.2K Jun 20 all_processes.txt
-  ↑ ↑  ↑  ↑
-  │ │  │  └── Other: r-- = קריאה בלבד
-  │ │  └───── Group: r-- = קריאה בלבד
-  │ └──────── User:  rw- = קריאה וכתיבה
-  └────────── סוג: - = קובץ רגיל
+-r--r--r-- 1 student student 95 Jun 20 system_info.txt
 ```
 
-**הגנה על קובץ הממצאים (רק הבעלים יכול לקרוא):**
+נסה לכתוב לקובץ עם הרשאות 444:
 
 ```bash
-chmod 600 ~/investigation_$(date +%F)/processes/all_processes.txt
-ls -la ~/investigation_$(date +%F)/processes/all_processes.txt
+echo "test" >> ~/mylab/system_info.txt
 ```
-פלט לאחר שינוי:
+פלט:
+```
+bash: /home/student/mylab/system_info.txt: Permission denied
+```
+> הרשאות עובדות! לא ניתן לכתוב לקובץ read-only.
+
+החזר הרשאות כתיבה לבעלים:
+
+```bash
+chmod 644 ~/mylab/system_info.txt
+ls -la ~/mylab/system_info.txt
+```
+פלט:
+```
+-rw-r--r-- 1 student student 95 Jun 20 system_info.txt
+```
+
+הפוך קובץ לפרטי לחלוטין (רק הבעלים יכול לקרוא ולכתוב):
+
+```bash
+chmod 600 ~/mylab/processes/all_processes.txt
+ls -la ~/mylab/processes/all_processes.txt
+```
+פלט:
 ```
 -rw------- 1 student student 4.2K Jun 20 all_processes.txt
-     ↑
-     כולם הוסרו — רק הבעלים קורא וכותב
 ```
-
-**יצירת סקריפט והפיכתו להרצה:**
-
-```bash
-# צור סקריפט פשוט
-echo '#!/bin/bash' > ~/investigation_$(date +%F)/collect_info.sh
-echo 'echo "=== Hostname ===" >> report.txt' >> ~/investigation_$(date +%F)/collect_info.sh
-echo 'hostname >> report.txt' >> ~/investigation_$(date +%F)/collect_info.sh
-echo 'echo "=== Users ===" >> report.txt' >> ~/investigation_$(date +%F)/collect_info.sh
-echo 'who >> report.txt' >> ~/investigation_$(date +%F)/collect_info.sh
-```
-
-```bash
-# בדוק הרשאות לפני
-ls -la ~/investigation_$(date +%F)/collect_info.sh
-```
-פלט:
-```
--rw-r--r-- 1 student student 128 Jun 20 collect_info.sh
-```
-> הרשאת `x` (הרצה) **לא קיימת** — לא ניתן להריץ את הסקריפט עדיין
-
-```bash
-# ניסיון הרצה לפני הוספת הרשאה
-./collect_info.sh
-```
-פלט:
-```
-bash: ./collect_info.sh: Permission denied
-```
-
-```bash
-# הוסף הרשאת הרצה לבעלים
-chmod u+x ~/investigation_$(date +%F)/collect_info.sh
-ls -la ~/investigation_$(date +%F)/collect_info.sh
-```
-פלט:
-```
--rwxr--r-- 1 student student 128 Jun 20 collect_info.sh
-    ↑
-    x נוסף לבעלים בלבד (u+x)
-```
-
-```bash
-# הרץ את הסקריפט
-cd ~/investigation_$(date +%F)
-./collect_info.sh
-cat report.txt
-```
-פלט:
-```
-=== Hostname ===
-kali
-=== Users ===
-student  pts/0  2024-06-20 10:00 (:0)
-```
-
-**chmod עם אותיות (סימבולי):**
-
-```bash
-chmod o-r collect_info.sh        # הסר קריאה מ-Other
-chmod g+w processes/              # הוסף כתיבה לקבוצה
-chmod a-x collect_info.sh         # הסר הרצה מכולם (a = all)
-chmod u+x,g+x collect_info.sh    # הוסף הרצה לבעלים ולקבוצה
-```
+> כעת אף אחד אחר לא יכול לקרוא את הקובץ
 
 ---
 
 **משימות — שלב 3:**
 
-- [ ] הרץ `ls -la` על קבצי ה-`processes/` — מה ההרשאות הנוכחיות?
+- [ ] הרץ `ls -la ~/mylab/` — מה ההרשאות של `system_info.txt`?
+- [ ] הפוך אותו ל-`444` ונסה לכתוב — מה קורה?
+- [ ] החזר ל-`644` ונסה שוב לכתוב `echo "test" >> system_info.txt` — עובד?
 - [ ] הגן על `all_processes.txt` עם `chmod 600`
-- [ ] צור את `collect_info.sh` כמו בדוגמה
-- [ ] נסה להריץ **לפני** `chmod` — מה הודעת השגיאה?
-- [ ] הוסף הרשאת הרצה עם `chmod u+x` והרץ שוב — הצליח?
 
 ---
 
-## שלב 4 — חיפוש קבצים עם `find` ו-`locate` ⏱ 7 דקות
+## שלב 4 — חיפוש קבצים עם `find` ו-`locate` ⏱ 5 דקות
 
 ### `find` — חיפוש בזמן אמת
 
-```bash
-find [ספרייה] [תנאי] [פעולה]
-```
-
-**מציאת הקבצים שיצרנו בחקירה:**
+מציאת כל הקבצים בתקיית `mylab`:
 
 ```bash
-# מצא את כל הקבצים בתקיית החקירה
-find ~/investigation_$(date +%F) -type f
-```
-פלט לדוגמה:
-```
-/home/student/investigation_2024-06-20/system_info.txt
-/home/student/investigation_2024-06-20/report.txt
-/home/student/investigation_2024-06-20/collect_info.sh
-/home/student/investigation_2024-06-20/processes/all_processes.txt
-/home/student/investigation_2024-06-20/processes/root_processes.txt
-```
-
-**חיפוש לפי סיומת:**
-
-```bash
-find ~/investigation_$(date +%F) -name "*.txt"
+find ~/mylab -type f
 ```
 פלט:
 ```
-/home/student/investigation_2024-06-20/system_info.txt
-/home/student/investigation_2024-06-20/report.txt
-/home/student/investigation_2024-06-20/processes/all_processes.txt
-/home/student/investigation_2024-06-20/processes/root_processes.txt
+/home/student/mylab/system_info.txt
+/home/student/mylab/processes/all_processes.txt
 ```
 
-**חיפוש לפי הרשאות:**
+חיפוש לפי סיומת:
 
 ```bash
-# מצא קבצים עם הרשאות 600 (שהגנו עליהם)
-find ~/investigation_$(date +%F) -perm 600
+find ~/mylab -name "*.txt"
 ```
 פלט:
 ```
-/home/student/investigation_2024-06-20/processes/all_processes.txt
+/home/student/mylab/system_info.txt
+/home/student/mylab/processes/all_processes.txt
 ```
 
-**חיפוש קבצים שניתן להריץ:**
+מציאת תקיות בלבד:
 
 ```bash
-find ~/investigation_$(date +%F) -perm /111 -type f
+find ~/mylab -type d
 ```
 פלט:
 ```
-/home/student/investigation_2024-06-20/collect_info.sh
+/home/student/mylab
+/home/student/mylab/files
+/home/student/mylab/processes
 ```
 
-**חיפוש קבצים שנוצרו בדקות האחרונות:**
+שמור את רשימת הקבצים:
 
 ```bash
-find ~/investigation_$(date +%F) -mmin -30
+find ~/mylab -type f > ~/mylab/files/file_list.txt
+cat ~/mylab/files/file_list.txt
 ```
 פלט:
 ```
-/home/student/investigation_2024-06-20
-/home/student/investigation_2024-06-20/system_info.txt
-/home/student/investigation_2024-06-20/processes/all_processes.txt
-... (כל הקבצים מה-30 דקות האחרונות)
-```
-
-**שמירת ממצאי find לקובץ:**
-
-```bash
-find ~/investigation_$(date +%F) -type f > ~/investigation_$(date +%F)/files/file_list.txt
-cat ~/investigation_$(date +%F)/files/file_list.txt
+/home/student/mylab/system_info.txt
+/home/student/mylab/processes/all_processes.txt
 ```
 
 ---
 
-### `locate` — חיפוש מהיר ממסד נתונים
+### `locate` — חיפוש מהיר
+
+`locate` מחפש ב-database מוכנה — הרבה יותר מהיר מ-`find`.  
+**חסרון:** לא יודע על קבצים שנוצרו לאחרונה — צריך לעדכן קודם.
+
+עדכן את ה-database:
 
 ```bash
-# עדכן את ה-database (חובה לפני חיפוש קבצים חדשים)
 sudo updatedb
+```
+
+חפש את הקובץ שיצרנו:
+
+```bash
+locate system_info.txt
 ```
 פלט:
 ```
-(שקט — עדכון שקט = הצלחה)
+/home/student/mylab/system_info.txt
 ```
+
+חפש לפי חלק מהשם:
 
 ```bash
-# חפש את קבצי החקירה שלנו
-locate system_info.txt
+locate mylab
 ```
-פלט לדוגמה:
+פלט:
 ```
-/home/student/investigation_2024-06-20/system_info.txt
-```
-
-```bash
-# חפש לפי חלק משם
-locate investigation
-```
-פלט לדוגמה:
-```
-/home/student/investigation_2024-06-20
-/home/student/investigation_2024-06-20/collect_info.sh
-/home/student/investigation_2024-06-20/report.txt
-/home/student/investigation_2024-06-20/system_info.txt
-/home/student/investigation_2024-06-20/files/file_list.txt
-/home/student/investigation_2024-06-20/processes/all_processes.txt
-/home/student/investigation_2024-06-20/processes/root_processes.txt
-```
-
-**השוואה מהירה — מתי להשתמש במה:**
-
-```
-find  → כשצריך תנאים (גודל, זמן, הרשאות) | מוצא קבצים חדשים
-locate → כשרוצים מהירות | לא מוצא קבצים עד sudo updatedb
+/home/student/mylab
+/home/student/mylab/files
+/home/student/mylab/files/file_list.txt
+/home/student/mylab/processes
+/home/student/mylab/processes/all_processes.txt
+/home/student/mylab/system_info.txt
 ```
 
 ---
 
 **משימות — שלב 4:**
 
-- [ ] הרץ `find ~/investigation_$(date +%F) -type f` — כמה קבצים יש?
-- [ ] מצא קבצים עם הרשאות 600: `find ~/investigation_$(date +%F) -perm 600`
+- [ ] הרץ `find ~/mylab -type f` — כמה קבצים יש?
+- [ ] הרץ `find ~/mylab -name "*.txt"` — נמצאו אותם קבצים?
 - [ ] הרץ `sudo updatedb` ואז `locate system_info.txt` — נמצא?
-- [ ] שמור את רשימת הקבצים ל-`files/file_list.txt`
+- [ ] שמור רשימת קבצים ל-`files/file_list.txt`
 
 ---
 
@@ -538,257 +413,183 @@ locate → כשרוצים מהירות | לא מוצא קבצים עד sudo upda
 
 ### מה זה `kill`?
 
-הפקודה `kill` שולחת **signal** לתהליך.  
-Signal הוא הודעה קצרה שהמערכת שולחת לתהליך — "עצור", "הפסק", "רענן".
-
-| Signal | מספר | משמעות | מתי משתמשים |
-|--------|------|---------|-------------|
-| `SIGTERM` | 15 | בקשה נעימה לסיום | ברירת המחדל — נותן לתהליך לסגור בסדר |
-| `SIGKILL` | 9 | כיבוי כוחני מיידי | כשהתהליך לא מגיב ל-SIGTERM |
-| `SIGHUP` | 1 | רענון הגדרות | שרתים (nginx, apache) — reload |
+`kill` שולח **הודעה לתהליך** שיפסיק לרוץ.  
+יש שני סוגים עיקריים:
 
 ```
-kill PID          ← שולח SIGTERM (15) — ברירת מחדל
-kill -9 PID       ← שולח SIGKILL — "מוות מיידי"
-kill -15 PID      ← שולח SIGTERM במפורש
-killall sleep     ← הרוג את כל התהליכים בשם "sleep"
-pkill -f sleep    ← הרוג לפי שם תהליך (גמיש יותר)
+kill PID      ← בקשה נעימה — "בבקשה תסגר" (SIGTERM)
+kill -9 PID   ← כיבוי כוחני — "מת עכשיו" (SIGKILL)
 ```
+
+תמיד מנסים `kill` רגיל קודם. רק אם התהליך לא מגיב — משתמשים ב-`kill -9`.
 
 ---
 
-### הדגמות
+**זכור את ה-`sleep 500` שהפעלנו בשלב 2?**
 
-**זכור את ה-`sleep 1000` שהפעלנו בשלב 2? עכשיו נסיים אותו.**
-
-**שלב א — מצא את ה-PID:**
+מצא אותו שוב — וודא שה-PID שרשמת נכון:
 
 ```bash
 ps aux | grep sleep
 ```
-פלט לדוגמה:
+פלט:
 ```
-student  1456  0.0  0.0  13360  724 pts/0  S  11:05  0:00 sleep 1000
-student  1890  0.0  0.0  13360  712 pts/0  S+ 11:20  0:00 grep --color=auto sleep
+student  1456  0.0  0.0  sleep 500
+student  1890  0.0  0.0  grep --color=auto sleep
 ```
-> PID של sleep = `1456` (לא של grep!)
+> ה-PID שלנו הוא `1456` — לא `1890` שזה ה-grep עצמו
 
-**שלב ב — שלח SIGTERM (סיום נעים):**
+שלח לו הודעת סיום:
 
 ```bash
 kill 1456
 ```
-פלט:
-```
-(שקט — Signal נשלח)
-```
+
+ודא שנסגר:
 
 ```bash
-# ודא שהתהליך נסגר
 ps aux | grep sleep
 ```
-פלט אחרי kill:
+פלט לאחר kill:
 ```
-student  1891  0.0  0.0  13360  712 pts/0  S+ 11:20  0:00 grep --color=auto sleep
+student  1891  0.0  0.0  grep --color=auto sleep
 ```
-> שורת ה-`sleep 1000` נעלמה — התהליך מת!
+> שורת ה-`sleep 500` נעלמה — התהליך נסגר!
 
-בטרמינל גם תראה:
+בטרמינל תופיע גם הודעה:
 ```
-[1]+  Terminated              sleep 1000
+[1]+  Terminated              sleep 500
 ```
-
----
-
-**הפעלת תהליך עיקש ושימוש ב-kill -9:**
-
-```bash
-# הפעל sleep חדש ברקע
-sleep 2000 &
-```
-פלט:
-```
-[1] 2001
-```
-
-```bash
-# מצא PID
-ps aux | grep "sleep 2000"
-```
-פלט:
-```
-student  2001  0.0  0.0  13360  724 pts/0  S  11:22  0:00 sleep 2000
-```
-
-```bash
-# כבה בכוח עם -9
-kill -9 2001
-ps aux | grep "sleep 2000"
-```
-פלט לאחר kill -9:
-```
-[1]+  Killed                  sleep 2000
-```
-> `Killed` (לעומת `Terminated`) = SIGKILL שימש
 
 ---
 
-**שמירת תיעוד ה-kill:**
+הפעל תהליך חדש ורוג אותו עם `-9`:
 
 ```bash
-echo "=== KILLED PROCESSES ===" > ~/investigation_$(date +%F)/processes/killed_log.txt
-echo "PID 1456 - sleep 1000 - SIGTERM - $(date)" >> ~/investigation_$(date +%F)/processes/killed_log.txt
-echo "PID 2001 - sleep 2000 - SIGKILL - $(date)" >> ~/investigation_$(date +%F)/processes/killed_log.txt
-cat ~/investigation_$(date +%F)/processes/killed_log.txt
+sleep 999 &
 ```
 פלט:
 ```
-=== KILLED PROCESSES ===
-PID 1456 - sleep 1000 - SIGTERM - Thu Jun 20 11:20:00 IDT 2024
-PID 2001 - sleep 2000 - SIGKILL - Thu Jun 20 11:22:00 IDT 2024
+[1] 2050
 ```
+
+```bash
+kill -9 2050
+```
+
+```bash
+ps aux | grep sleep
+```
+פלט:
+```
+[1]+  Killed                  sleep 999
+```
+> `Killed` = נרצח בכוח (SIGKILL). `Terminated` = נסגר בנימוס (SIGTERM).
 
 ---
 
 **משימות — שלב 5:**
 
-- [ ] הרץ `ps aux | grep sleep` — מצא את ה-PID של ה-sleep שהפעלת בשלב 2
-- [ ] שלח לו `kill <PID>` — ודא שנסגר עם `ps aux | grep sleep`
-- [ ] הפעל `sleep 2000 &` חדש, ורוג אותו עם `kill -9`
-- [ ] שמור את ה-kills ל-`processes/killed_log.txt`
+- [ ] הרץ `ps aux | grep sleep` — מצא את ה-PID של ה-sleep משלב 2
+- [ ] הרץ `kill <PID>` — ודא שנסגר עם `ps aux | grep sleep`
+- [ ] הפעל `sleep 999 &` — רשום PID ורוג עם `kill -9`
+- [ ] מה ההבדל בהודעה בין `Terminated` ל-`Killed`?
 
 ---
 
-## שלב 6 — העברת תקיית החקירה ⏱ 3 דקות
+## שלב 6 — העברת התקייה ⏱ 2 דקות
 
-### סיכום — מה יש לנו?
-
-```bash
-# הצג את כל מה שאספנו
-find ~/investigation_$(date +%F) -type f
-```
-פלט לדוגמה:
-```
-/home/student/investigation_2024-06-20/system_info.txt
-/home/student/investigation_2024-06-20/report.txt
-/home/student/investigation_2024-06-20/collect_info.sh
-/home/student/investigation_2024-06-20/files/file_list.txt
-/home/student/investigation_2024-06-20/processes/all_processes.txt
-/home/student/investigation_2024-06-20/processes/root_processes.txt
-/home/student/investigation_2024-06-20/processes/killed_log.txt
-```
+### מה יש לנו?
 
 ```bash
-# גודל כל תקיית החקירה
-du -sh ~/investigation_$(date +%F)
-```
-פלט לדוגמה:
-```
-52K     /home/student/investigation_2024-06-20
-```
-
----
-
-### העברה למיקום קבוע
-
-חוקר מסיים חקירה → **מעביר את כל הממצאים לארכיון**.
-
-```bash
-# צור תקיית ארכיון (אם לא קיימת)
-mkdir -p ~/archive
-```
-
-```bash
-# העבר את כל תקיית החקירה לארכיון
-mv ~/investigation_$(date +%F) ~/archive/
-```
-
-```bash
-# ודא שהתקייה הועברה
-ls ~/archive/
+find ~/mylab -type f
 ```
 פלט:
 ```
-investigation_2024-06-20
+/home/student/mylab/system_info.txt
+/home/student/mylab/files/file_list.txt
+/home/student/mylab/processes/all_processes.txt
 ```
 
 ```bash
-# ודא שנעלמה מ-home
+du -sh ~/mylab
+```
+פלט לדוגמה:
+```
+28K     /home/student/mylab
+```
+
+---
+
+### העבר הכל לתקיית ארכיון
+
+```bash
+mkdir ~/archive
+mv ~/mylab ~/archive/
+```
+
+ודא שנעלמה מ-home:
+
+```bash
 ls ~/
 ```
 פלט:
 ```
 Desktop  Documents  Downloads  archive
 ```
-> `investigation_2024-06-20` נעלמה מ-home ועברה ל-`archive/`
+> `mylab` נעלמה!
+
+ודא שנמצאת בארכיון:
 
 ```bash
-# ודא שכל הקבצים שרדו את ההעברה
-find ~/archive/investigation_$(date +%F) -type f
+ls ~/archive/
 ```
 פלט:
 ```
-/home/student/archive/investigation_2024-06-20/system_info.txt
-/home/student/archive/investigation_2024-06-20/report.txt
-/home/student/archive/investigation_2024-06-20/collect_info.sh
-/home/student/archive/investigation_2024-06-20/files/file_list.txt
-/home/student/archive/investigation_2024-06-20/processes/all_processes.txt
-/home/student/archive/investigation_2024-06-20/processes/root_processes.txt
-/home/student/archive/investigation_2024-06-20/processes/killed_log.txt
+mylab
+```
+
+ודא שכל הקבצים שרדו:
+
+```bash
+find ~/archive/mylab -type f
+```
+פלט:
+```
+/home/student/archive/mylab/system_info.txt
+/home/student/archive/mylab/files/file_list.txt
+/home/student/archive/mylab/processes/all_processes.txt
 ```
 
 ---
 
 **משימות — שלב 6:**
 
-- [ ] הרץ `find ~/investigation_$(date +%F) -type f` — כמה קבצים נאספו בסך הכל?
-- [ ] העבר את כל תקיית החקירה ל-`~/archive/` עם `mv`
-- [ ] ודא שהתקייה נעלמה מ-`~/` ונמצאת ב-`~/archive/`
-- [ ] ודא שכל הקבצים שרדו עם `find ~/archive/ -type f`
+- [ ] הרץ `find ~/mylab -type f` — כמה קבצים יש בסה"כ?
+- [ ] צור `~/archive` ו-העבר אליה את `mylab` עם `mv`
+- [ ] ודא שה-`mylab` נעלמה מ-`~/` ונמצאת ב-`~/archive/`
+- [ ] ודא שכל הקבצים שרדו עם `find ~/archive/mylab -type f`
 
 ---
 
 ## סיכום הפקודות
 
-```bash
-# ── ניהול תקיות ──────────────────────────────────────────
-mkdir -p dir/subdir              # צור תקיות כולל תת-תקיות
-mv source/ destination/          # העבר תקייה
-du -sh directory/                # גודל תקייה
-
-# ── שמירת פלטים ──────────────────────────────────────────
-command > file.txt               # שמור פלט (מחליף)
-command >> file.txt              # הוסף פלט לקיים
-echo "text" >> file.txt          # הוסף שורת טקסט
-
-# ── תהליכים (ps) ─────────────────────────────────────────
-ps aux                           # כל התהליכים
-ps aux | grep name               # חפש תהליך לפי שם
-ps -ef --forest                  # הצג כעץ הורים
-command &                        # הפעל ברקע
-
-# ── הרשאות (chmod) ───────────────────────────────────────
-chmod 600 file      # rw------- בעלים בלבד
-chmod 644 file      # rw-r--r-- קריאה לכולם
-chmod 755 file      # rwxr-xr-x הרצה לכולם
-chmod u+x file      # הוסף הרצה לבעלים
-chmod o-r file      # הסר קריאה מ-Other
-
-# ── חיפוש (find) ─────────────────────────────────────────
-find ~/dir -type f              # קבצים בלבד
-find ~/dir -name "*.txt"        # לפי שם
-find ~/dir -perm 600            # לפי הרשאות
-find ~/dir -mmin -30            # שונה בחצי שעה אחרונה
-
-# ── חיפוש (locate) ───────────────────────────────────────
-sudo updatedb                   # עדכן database
-locate filename                 # חפש קובץ
-
-# ── סיום תהליכים (kill) ──────────────────────────────────
-kill PID                        # SIGTERM — סיום נעים
-kill -9 PID                     # SIGKILL — סיום כוחני
-killall name                    # הרוג לפי שם
-```
+| פקודה | מה היא עושה |
+|-------|------------|
+| `mkdir dir` | יצירת תקייה |
+| `mv source dest` | העברת תקייה/קובץ |
+| `command > file` | שמור פלט לקובץ |
+| `command >> file` | הוסף פלט לקובץ קיים |
+| `ps aux` | הצג את כל התהליכים |
+| `ps aux \| grep name` | חפש תהליך לפי שם |
+| `sleep N &` | הפעל תהליך ברקע |
+| `chmod 644 file` | שנה הרשאות |
+| `find ~/dir -type f` | חפש קבצים |
+| `find ~/dir -name "*.txt"` | חפש לפי שם |
+| `sudo updatedb` | עדכן database של locate |
+| `locate name` | חפש קובץ במהירות |
+| `kill PID` | סגור תהליך בנימוס |
+| `kill -9 PID` | סגור תהליך בכוח |
 
 ---
 
