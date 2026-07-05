@@ -409,12 +409,57 @@ Password: הדבק את ה-TOKEN כאן (לא הסיסמה הרגילה!)
 
 **שמור את ה-Token כדי לא להקליד אותו בכל פעם:**
 
+הרץ את הפקודה הזו **פעם אחת**:
+
 ```bash
 git config --global credential.helper store
 ```
 
-לאחר הרצת הפקודה — בפעם הראשונה שתכניס את ה-Token הוא יישמר.  
-**מהפעם השנייה `git push` יעבוד ללא שאלות.**
+ואז הרץ `git push` והכנס את הפרטים **פעם אחת**:
+
+```
+Username: השם שלך ב-GitHub
+Password: הדבק את ה-TOKEN
+```
+
+מהרגע הזה Git זוכר — **לא ישאל יותר**.
+
+ודא שנשמר:
+
+```bash
+cat ~/.git-credentials
+```
+פלט:
+```
+https://USERNAME:ghp_abc123TOKEN@github.com
+```
+
+---
+
+**אפשרות מהירה יותר — הכנס את ה-Token ישירות ב-URL:**
+
+```bash
+git remote set-url origin https://USERNAME:TOKEN@github.com/USERNAME/my_first_repo.git
+```
+
+דוגמה:
+```bash
+git remote set-url origin https://itamar:ghp_abc123XYZ@github.com/itamar/my_first_repo.git
+```
+
+מעכשיו `git push` עובד ישר — **ללא שאלות בכלל**.
+
+ודא:
+```bash
+git remote -v
+```
+פלט:
+```
+origin  https://itamar:ghp_abc123XYZ@github.com/itamar/my_first_repo.git (fetch)
+origin  https://itamar:ghp_abc123XYZ@github.com/itamar/my_first_repo.git (push)
+```
+
+> **אזהרה:** ה-Token גלוי ב-URL — אל תשתף את הפקודה הזו עם אחרים.
 
 ---
 
