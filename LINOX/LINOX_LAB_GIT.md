@@ -371,8 +371,50 @@ Branch 'main' set up to track remote branch 'main' from 'origin'.
 > `-u origin main` = "העלה לorigin לענף main, ובפעמים הבאות זכור את זה"  
 > בפעמים הבאות מספיק `git push` בלבד
 
-> **אם GitHub מבקש סיסמה** — צריך Personal Access Token.  
-> ב-GitHub: Settings → Developer settings → Personal access tokens → Generate new token
+---
+
+### לפני ה-Push — חובה: יצירת Personal Access Token
+
+GitHub **לא מקבל סיסמה רגילה** מהטרמינל. צריך ליצור **Token** שישמש כסיסמה.
+
+**שלבים ליצירת Token:**
+
+1. כנס ל-**github.com** והתחבר
+2. לחץ על **תמונת הפרופיל** (פינה ימנית עליונה) → **Settings**
+3. גלול למטה → לחץ **Developer settings**
+4. לחץ **Personal access tokens** → **Tokens (classic)**
+5. לחץ **Generate new token** → **Generate new token (classic)**
+6. מלא את הפרטים:
+   - **Note:** `kali-lab`
+   - **Expiration:** `90 days`
+   - **Scopes:** סמן ✅ **`repo`** בלבד — זה כל מה שצריך
+7. לחץ **Generate token**
+8. **העתק את הToken מיד!** — הוא מוצג פעם אחת בלבד
+
+**איך ה-Token נראה:**
+```
+ghp_abc123XYZ456defGHI789jklMNO012pqr
+```
+
+---
+
+**כשGit שואל Username ו-Password:**
+
+```
+Username: השם שלך ב-GitHub
+Password: הדבק את ה-TOKEN כאן (לא הסיסמה הרגילה!)
+```
+
+---
+
+**שמור את ה-Token כדי לא להקליד אותו בכל פעם:**
+
+```bash
+git config --global credential.helper store
+```
+
+לאחר הרצת הפקודה — בפעם הראשונה שתכניס את ה-Token הוא יישמר.  
+**מהפעם השנייה `git push` יעבוד ללא שאלות.**
 
 ---
 
