@@ -35,6 +35,85 @@
 
 ---
 
+## הסבר מורחב — Unit File State
+
+### מה זה Unit File State?
+
+```
+Active State    = מה קורה עכשיו, ברגע זה
+Unit File State = מה יקרה בפעם הבאה שהמחשב יאתחל
+```
+
+### שני סטאטוסים יחד — דוגמאות
+
+**שירות כבוי אך יעלה באתחול:**
+```bash
+systemctl status ssh
+```
+```
+Loaded: loaded (/lib/systemd/system/ssh.service; enabled)
+Active: inactive (dead)
+```
+| שורה | פירוש |
+|------|-------|
+| `Active: inactive` | SSH **כבוי עכשיו** |
+| `enabled` | אבל **יעלה אוטומטית** באתחול הבא |
+
+**שירות רץ אך לא יעלה באתחול:**
+```bash
+systemctl status apache2
+```
+```
+Loaded: loaded (/lib/systemd/system/apache2.service; disabled)
+Active: active (running)
+```
+| שורה | פירוש |
+|------|-------|
+| `Active: running` | Apache **רץ עכשיו** |
+| `disabled` | אבל **לא יעלה** אחרי restart — צריך להפעיל ידנית |
+
+---
+
+## הסבר מורחב — alias לעומת indirect
+
+שניהם לא שירותים "אמיתיים" — הם מצביעים לשירות אחר, אבל בצורה שונה:
+
+### `alias` — שם חלופי
+
+שם חלופי לאותו שירות בדיוק. כמו קיצור דרך — אותו יעד, שם אחר.
+
+```bash
+systemctl status nfs
+```
+```
+Loaded: loaded (/lib/systemd/system/nfs.service; alias)
+```
+> `nfs` הוא רק כינוי — בפועל מפעיל את `nfs-server.service`
+
+### `indirect` — מופעל רק על-ידי אחרים
+
+השירות עצמו לא מופעל ישירות, אלא רק כשמישהו אחר צריך אותו.
+
+```bash
+systemctl status dbus.socket
+```
+```
+Loaded: loaded (/lib/systemd/system/dbus.socket; indirect)
+```
+> `dbus.socket` עולה רק כשיש שירות שצריך אותו — לא לבד
+
+### השוואה
+
+| | `alias` | `indirect` |
+|--|---------|-----------|
+| **מה זה** | שם חלופי לשירות אחר | שירות שמופעל רק על-ידי אחרים |
+| **מי מפעיל** | אתה קורא לו, הוא מעביר הלאה | שירות אחר קורא לו |
+| **ניתן להפעיל ישירות** | כן (דרך השם האחר) | לא בדרך כלל |
+
+> **למתחילים:** החשובים לדעת הם `enabled`, `disabled`, `masked` ו-`failed`. את `alias` ו-`indirect` כמעט לא פוגשים בשימוש יומיומי.
+
+---
+
 ## פקודות שימושיות
 
 | פקודה | מה היא עושה |
