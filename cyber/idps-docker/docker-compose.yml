@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  idps:
+    build: .
+    image: idps-simulation:latest
+    container_name: idps-sim
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
