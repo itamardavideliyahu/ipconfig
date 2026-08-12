@@ -1,0 +1,23 @@
+# ─────────────────────────────────────────────────────────────
+# Copy this file to terraform.tfvars and fill in your values.
+# terraform.tfvars is in .gitignore — never commit it!
+# ─────────────────────────────────────────────────────────────
+
+aws_region   = "us-east-1"
+project_name = "idps-sim"
+
+# t2.micro = free tier (750 hours/month for 12 months)
+instance_type = "t2.micro"
+
+# Restrict SSH to your IP for security:
+# Run: curl ifconfig.me  — then set: ["YOUR.IP/32"]
+ssh_allowed_cidrs = ["0.0.0.0/0"]
+
+# Path to your SSH public key
+public_key_path = "~/.ssh/id_rsa.pub"
+
+# Port students will use in browser
+app_port = 8080
+
+# Your GitHub repo (must be public)
+github_repo = "https://github.com/itamardavideliyahu/ipconfig.git"
