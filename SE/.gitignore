@@ -1,0 +1,6 @@
+# Secrets / runtime - never commit
+aws-demo-password.txt
+instance-id.txt
+public-ip.txt
+*.pem
+.env

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SecureMail - התחברות לחשבון</title>
+<link rel="stylesheet" href="login.css" />
+</head>
+<body>
+
+  <div class="demo-ribbon">סביבת הדגמה לקורס - למטרות לימוד בלבד</div>
+
+  <div class="page">
+    <div class="login-card">
+      <div class="brand">
+        <div class="brand-logo">SM</div>
+        <div class="brand-name">SecureMail</div>
+      </div>
+
+      <h1>התחברות לחשבון</h1>
+      <p class="subtitle">כדי להמשיך, אנא הזן/י את פרטי ההתחברות שלך</p>
+
+      <form id="login-form" autocomplete="off">
+        <label for="username">אימייל או שם משתמש</label>
+        <input type="text" id="username" name="username" placeholder="name@example.com" required />
+
+        <label for="password">סיסמה</label>
+        <input type="password" id="password" name="password" placeholder="הזן/י סיסמה" required />
+
+        <button type="submit" id="submit-btn">התחברות</button>
+
+        <div class="links">
+          <a href="#">שכחת סיסמה?</a>
+          <a href="#">צור/י חשבון</a>
+        </div>
+      </form>
+
+      <div id="status-msg" class="status-msg"></div>
+    </div>
+
+    <div class="footer-note">
+      זהו דף הדגמה בלבד שנוצר לקורס הנדסה חברתית. אין להזין כאן פרטי התחברות אמיתיים לשום שירות.
+    </div>
+  </div>
+
+<script src="login.js"></script>
+</body>
+</html>

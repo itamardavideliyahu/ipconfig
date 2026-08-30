@@ -1,0 +1,11 @@
+services:
+  se-demo:
+    build: .
+    container_name: se-phishing-demo
+    ports:
+      # Reachable from this machine and from other devices on the SAME
+      # local/classroom network (e.g. http://<your-lan-ip>:3000/login.html).
+      # Do NOT port-forward this on your router or deploy it to a public
+      # cloud/VPS - it must stay inside the isolated classroom network.
+      - "3000:3000"
+    restart: unless-stopped

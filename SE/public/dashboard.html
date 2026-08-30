@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>לוח מרצה - הדגמת הנדסה חברתית</title>
+<link rel="stylesheet" href="dashboard.css" />
+</head>
+<body>
+
+  <div class="demo-ribbon">סביבת הדגמה לקורס - למטרות לימוד בלבד - לא לשימוש נגד יעדים אמיתיים</div>
+
+  <div class="wrap">
+    <header>
+      <h1>לוח מרצה: הדגמת מתקפת הנדסה חברתית (Phishing)</h1>
+      <p>
+        כל שם משתמש וסיסמה שיוזנו בדף ההתחברות המדומה (<code id="login-url">/login.html</code>)
+        יופיעו כאן בזמן אמת. הנתונים נשמרים בזיכרון בלבד ולא נכתבים לקובץ/דיסק,
+        ונמחקים אוטומטית עם עצירת השרת.
+      </p>
+      <button id="clear-btn">מחיקת כל הנתונים שנאספו</button>
+    </header>
+
+    <table id="captures-table">
+      <thead>
+        <tr>
+          <th>שעה</th>
+          <th>שם משתמש / אימייל</th>
+          <th>סיסמה שהוזנה</th>
+        </tr>
+      </thead>
+      <tbody id="captures-body">
+      </tbody>
+    </table>
+
+    <p id="empty-msg" class="empty-msg">עדיין לא נאספו נתונים. פתח/י את דף ההתחברות המדומה במכשיר אחר והזן/י פרטים כלשהם כדי לראות את ההדגמה.</p>
+  </div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>

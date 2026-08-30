@@ -1,0 +1,13 @@
+{
+  "name": "social-engineering-demo",
+  "version": "1.0.0",
+  "description": "Local classroom demo of a phishing (credential harvesting) attack for a social engineering course. Runs locally / on an isolated classroom network only.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  }
+}
